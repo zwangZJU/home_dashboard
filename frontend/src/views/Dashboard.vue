@@ -3,29 +3,30 @@
     <!-- Stats Cards -->
     <el-row :gutter="16" class="mb-6">
       <el-col :span="6" v-for="card in statCards" :key="card.label">
-        <el-card shadow="hover" class="stat-card" @click="$router.push(card.route)">
+        <div class="stat-card" :class="`stat-card-${card.theme}`" @click="$router.push(card.route)">
+          <div class="stat-glow"></div>
           <div class="stat-content">
-            <div class="stat-icon" :style="{ background: card.bg }">
-              <el-icon :size="24" :color="card.color"><component :is="card.icon" /></el-icon>
+            <div class="stat-icon" :style="{ background: card.bg, color: card.color }">
+              <el-icon :size="24"><component :is="card.icon" /></el-icon>
             </div>
             <div>
               <div class="stat-value">{{ card.value }}</div>
               <div class="stat-label">{{ card.label }}</div>
             </div>
           </div>
-        </el-card>
+        </div>
       </el-col>
     </el-row>
 
     <el-row :gutter="16" class="mb-6">
       <el-col :span="14">
-        <el-card shadow="hover">
+        <el-card shadow="never">
           <template #header><span class="card-title">📈 需求完成趋势（近30天）</span></template>
           <div ref="trendChartRef" style="height: 300px"></div>
         </el-card>
       </el-col>
       <el-col :span="10">
-        <el-card shadow="hover">
+        <el-card shadow="never">
           <template #header><span class="card-title">📅 近期会议</span></template>
           <div class="meeting-list">
             <div v-for="m in meetings.slice(0, 5)" :key="m.id" class="meeting-item" @click="$router.push(`/meetings/${m.id}`)">
@@ -42,7 +43,7 @@
 
     <el-row :gutter="16">
       <el-col :span="14">
-        <el-card shadow="hover">
+        <el-card shadow="never">
           <template #header><span class="card-title">🔥 紧急任务（高优先级）</span></template>
           <el-table :data="urgentTasks" size="small" stripe>
             <el-table-column prop="task_no" label="编号" width="100" />
@@ -62,12 +63,12 @@
         </el-card>
       </el-col>
       <el-col :span="10">
-        <el-card shadow="hover">
+        <el-card shadow="never">
           <template #header><span class="card-title">⏰ 近期截止任务</span></template>
           <div class="deadline-list">
             <div v-for="t in upcomingTasks" :key="t.id" class="deadline-item">
               <div class="deadline-title">{{ t.title }}</div>
-              <el-tag size="small" :type="isOverdue(t.due_date) ? 'danger' : 'info'">
+              <el-tag size="small" :type="isOverdue(t.due_date) ? 'danger' : 'info'" effect="dark">
                 {{ t.due_date }}
               </el-tag>
             </div>
@@ -95,10 +96,10 @@ const meetings = ref<any[]>([])
 const trendChartRef = ref<HTMLElement>()
 
 const statCards = computed(() => [
-  { label: '总需求', value: stats.value.total_requirements || 0, icon: 'Document', color: '#409EFF', bg: '#ecf5ff', route: '/requirements' },
-  { label: '进行中', value: stats.value.active_tasks || 0, icon: 'Loading', color: '#E6A23C', bg: '#fdf6ec', route: '/tasks' },
-  { label: '已完成', value: stats.value.completed_tasks || 0, icon: 'CircleCheck', color: '#67C23A', bg: '#f0f9eb', route: '/tasks' },
-  { label: '已逾期', value: stats.value.overdue_tasks || 0, icon: 'WarningFilled', color: '#F56C6C', bg: '#fef0f0', route: '/tasks' },
+  { label: '总需求', value: stats.value.total_requirements || 0, icon: 'Document', color: '#00f0ff', bg: 'rgba(0, 240, 255, 0.1)', theme: 'cyan', route: '/requirements' },
+  { label: '进行中', value: stats.value.active_tasks || 0, icon: 'Loading', color: '#f59e0b', bg: 'rgba(245, 158, 11, 0.1)', theme: 'amber', route: '/tasks' },
+  { label: '已完成', value: stats.value.completed_tasks || 0, icon: 'CircleCheck', color: '#22c55e', bg: 'rgba(34, 197, 94, 0.1)', theme: 'green', route: '/tasks' },
+  { label: '已逾期', value: stats.value.overdue_tasks || 0, icon: 'WarningFilled', color: '#ef4444', bg: 'rgba(239, 68, 68, 0.1)', theme: 'red', route: '/tasks' },
 ])
 
 const urgentTasks = computed(() => tasks.value.filter((t: any) => t.priority === 'high').slice(0, 10))
@@ -118,10 +119,42 @@ onMounted(async () => {
   if (trendChartRef.value) {
     const chart = echarts.init(trendChartRef.value)
     chart.setOption({
-      tooltip: { trigger: 'axis' },
-      xAxis: { type: 'category', data: trendData.value.map((d) => d.date) },
-      yAxis: { type: 'value', minInterval: 1 },
-      series: [{ name: '完成数', type: 'line', data: trendData.value.map((d) => d.count), smooth: true, areaStyle: { opacity: 0.15 }, itemStyle: { color: '#409EFF' } }],
+      tooltip: {
+        trigger: 'axis',
+        backgroundColor: 'rgba(15, 23, 42, 0.9)',
+        borderColor: 'rgba(0, 240, 255, 0.2)',
+        textStyle: { color: '#e2e8f0' },
+      },
+      xAxis: {
+        type: 'category',
+        data: trendData.value.map((d) => d.date),
+        axisLine: { lineStyle: { color: 'rgba(0, 240, 255, 0.15)' } },
+        axisLabel: { color: '#64748b' },
+        splitLine: { show: false },
+      },
+      yAxis: {
+        type: 'value',
+        minInterval: 1,
+        axisLine: { show: false },
+        axisLabel: { color: '#64748b' },
+        splitLine: { lineStyle: { color: 'rgba(0, 240, 255, 0.06)' } },
+      },
+      series: [{
+        name: '完成数',
+        type: 'line',
+        data: trendData.value.map((d) => d.count),
+        smooth: true,
+        symbol: 'circle',
+        symbolSize: 6,
+        lineStyle: { color: '#00f0ff', width: 2, shadowColor: 'rgba(0, 240, 255, 0.3)', shadowBlur: 10 },
+        itemStyle: { color: '#00f0ff' },
+        areaStyle: {
+          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+            { offset: 0, color: 'rgba(0, 240, 255, 0.25)' },
+            { offset: 1, color: 'rgba(0, 240, 255, 0)' },
+          ]),
+        },
+      }],
       grid: { left: 40, right: 20, bottom: 30, top: 20 },
     })
   }
@@ -129,22 +162,77 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.stat-card { cursor: pointer; transition: transform 0.2s; }
-.stat-card:hover { transform: translateY(-2px); }
-.stat-content { display: flex; align-items: center; gap: 16px; }
-.stat-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
-.stat-value { font-size: 28px; font-weight: 700; color: #303133; }
-.stat-label { font-size: 13px; color: #909399; margin-top: 4px; }
-.card-title { font-size: 15px; font-weight: 600; }
 .mb-6 { margin-bottom: 24px; }
+.card-title { font-size: 15px; font-weight: 600; }
+
+/* Stat cards with glow accent */
+.stat-card {
+  position: relative;
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 240, 255, 0.1);
+  border-radius: 12px;
+  padding: 20px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+.stat-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  border-radius: 0 2px 2px 0;
+}
+.stat-card-cyan::before { background: #00f0ff; box-shadow: 0 0 10px rgba(0, 240, 255, 0.5); }
+.stat-card-amber::before { background: #f59e0b; box-shadow: 0 0 10px rgba(245, 158, 11, 0.5); }
+.stat-card-green::before { background: #22c55e; box-shadow: 0 0 10px rgba(34, 197, 94, 0.5); }
+.stat-card-red::before { background: #ef4444; box-shadow: 0 0 10px rgba(239, 68, 68, 0.5); }
+.stat-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(0, 240, 255, 0.25);
+  box-shadow: 0 0 25px rgba(0, 240, 255, 0.08);
+}
+.stat-content { display: flex; align-items: center; gap: 16px; }
+.stat-icon {
+  width: 48px; height: 48px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+}
+.stat-value {
+  font-size: 28px; font-weight: 700;
+  background: linear-gradient(135deg, #e2e8f0, #94a3b8);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.stat-label { font-size: 13px; color: #94a3b8; margin-top: 4px; }
+
+/* Meeting list */
 .meeting-list { display: flex; flex-direction: column; gap: 12px; }
-.meeting-item { display: flex; align-items: center; gap: 12px; padding: 8px; border-radius: 8px; cursor: pointer; transition: background 0.2s; }
-.meeting-item:hover { background: #f5f7fa; }
-.meeting-icon { color: #409EFF; font-size: 18px; }
-.meeting-title { font-weight: 500; color: #303133; }
-.meeting-meta { font-size: 12px; color: #909399; margin-top: 2px; }
+.meeting-item {
+  display: flex; align-items: center; gap: 12px; padding: 10px 12px;
+  border-radius: 10px; cursor: pointer; transition: all 0.3s ease;
+  border: 1px solid transparent;
+}
+.meeting-item:hover {
+  background: rgba(0, 240, 255, 0.05);
+  border-color: rgba(0, 240, 255, 0.15);
+}
+.meeting-icon { color: #00f0ff; font-size: 18px; }
+.meeting-title { font-weight: 500; color: #e2e8f0; }
+.meeting-meta { font-size: 12px; color: #64748b; margin-top: 2px; }
+
+/* Deadline list */
 .deadline-list { display: flex; flex-direction: column; gap: 10px; }
-.deadline-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: #fafafa; border-radius: 8px; }
-.deadline-title { font-size: 14px; color: #303133; }
-.text-danger { color: #F56C6C; font-weight: 600; }
+.deadline-item {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 14px; background: rgba(15, 23, 42, 0.5);
+  border-radius: 10px; border: 1px solid rgba(0, 240, 255, 0.06);
+  transition: all 0.3s ease;
+}
+.deadline-item:hover {
+  border-color: rgba(0, 240, 255, 0.15);
+}
+.deadline-title { font-size: 14px; color: #e2e8f0; }
+.text-danger { color: #ef4444 !important; font-weight: 600; }
 </style>

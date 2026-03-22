@@ -20,7 +20,7 @@
     </el-tabs>
 
     <div class="req-cards">
-      <el-card v-for="req in requirements" :key="req.id" shadow="hover" class="req-card" @click="$router.push(`/requirements/${req.id}`)">
+      <div v-for="req in requirements" :key="req.id" class="req-card" @click="$router.push(`/requirements/${req.id}`)">
         <div class="req-header">
           <span class="req-no">{{ req.req_no }}</span>
           <PriorityTag :priority="req.priority" />
@@ -33,7 +33,7 @@
           <span v-if="req.expected_date">预计: {{ req.expected_date }}</span>
           <el-progress :percentage="calcProgress(req)" :stroke-width="8" style="width: 120px" />
         </div>
-      </el-card>
+      </div>
     </div>
 
     <el-empty v-if="requirements.length === 0" description="暂无需求" />
@@ -98,14 +98,28 @@ onMounted(loadRequirements)
 
 <style scoped>
 .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-.page-header h2 { margin: 0; }
+.page-header h2 { margin: 0; color: #e2e8f0; }
 .header-actions { display: flex; gap: 12px; }
 .req-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 16px; margin-top: 16px; }
-.req-card { cursor: pointer; transition: transform 0.2s; }
-.req-card:hover { transform: translateY(-2px); }
+.req-card {
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 240, 255, 0.1);
+  border-radius: 12px; padding: 20px;
+  cursor: pointer; transition: all 0.3s ease;
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.03);
+}
+.req-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(0, 240, 255, 0.25);
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.08);
+}
 .req-header { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
-.req-no { font-weight: 600; color: #409EFF; font-size: 13px; }
-.req-title { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
-.req-desc { color: #909399; font-size: 13px; line-height: 1.5; }
-.req-footer { display: flex; align-items: center; gap: 16px; margin-top: 12px; font-size: 12px; color: #909399; }
+.req-no {
+  font-weight: 600; font-size: 13px; color: #00f0ff;
+  text-shadow: 0 0 6px rgba(0, 240, 255, 0.3);
+}
+.req-title { font-size: 16px; font-weight: 600; margin-bottom: 6px; color: #e2e8f0; }
+.req-desc { color: #64748b; font-size: 13px; line-height: 1.5; }
+.req-footer { display: flex; align-items: center; gap: 16px; margin-top: 12px; font-size: 12px; color: #64748b; }
 </style>

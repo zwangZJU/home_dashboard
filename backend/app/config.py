@@ -4,7 +4,7 @@ from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
     # 数据库
-    database_url: str = "postgresql+asyncpg://postgres:postgres@localhost:5432/devtrack"
+    database_url: str = "sqlite+aiosqlite:///./devtrack.db"
 
     # JWT
     jwt_secret_key: str = "devtrack-secret-key-change-in-production"

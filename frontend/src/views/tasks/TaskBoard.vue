@@ -163,7 +163,6 @@ const addComment = () => {
 }
 
 const onDragEnd = () => {
-  // Status is updated by the column assignment
   ElMessage.success('任务已移动')
 }
 
@@ -182,31 +181,49 @@ onMounted(async () => { tasks.value = await getTasksApi() })
 
 <style scoped>
 .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-.page-header h2 { margin: 0; }
+.page-header h2 { margin: 0; color: #e2e8f0; }
 .header-actions { display: flex; gap: 12px; }
 .board { display: flex; gap: 16px; overflow-x: auto; padding-bottom: 16px; }
-.board-column { flex: 1; min-width: 260px; background: #f0f2f5; border-radius: 12px; display: flex; flex-direction: column; max-height: calc(100vh - 180px); }
+.board-column {
+  flex: 1; min-width: 260px;
+  background: rgba(15, 23, 42, 0.5);
+  border: 1px solid rgba(0, 240, 255, 0.08);
+  border-radius: 12px;
+  display: flex; flex-direction: column;
+  max-height: calc(100vh - 180px);
+}
 .column-header { padding: 12px 16px; display: flex; align-items: center; gap: 8px; }
-.column-title { font-weight: 600; font-size: 15px; }
+.column-title { font-weight: 600; font-size: 15px; color: #e2e8f0; }
 .column-body { flex: 1; overflow-y: auto; padding: 0 12px 12px; min-height: 60px; }
-.task-card { background: #fff; border-radius: 10px; padding: 12px; margin-bottom: 8px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.06); transition: transform 0.15s; }
-.task-card:hover { transform: translateY(-1px); box-shadow: 0 3px 8px rgba(0,0,0,0.1); }
-.ghost { opacity: 0.5; background: #e6f7ff; }
+.task-card {
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(0, 240, 255, 0.1);
+  border-radius: 10px; padding: 12px; margin-bottom: 8px; cursor: pointer;
+  box-shadow: 0 0 8px rgba(0, 240, 255, 0.03);
+  transition: all 0.3s ease;
+}
+.task-card:hover {
+  transform: translateY(-1px);
+  border-color: rgba(0, 240, 255, 0.25);
+  box-shadow: 0 0 15px rgba(0, 240, 255, 0.08);
+}
+.ghost { opacity: 0.5; background: rgba(0, 240, 255, 0.1); }
 .task-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
-.task-no { font-size: 12px; color: #909399; font-weight: 600; }
-.task-card-title { font-weight: 500; font-size: 14px; margin-bottom: 8px; }
+.task-no { font-size: 12px; color: #00f0ff; font-weight: 600; }
+.task-card-title { font-weight: 500; font-size: 14px; margin-bottom: 8px; color: #e2e8f0; }
 .task-card-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
-.task-assignee { font-size: 12px; color: #606266; }
+.task-assignee { font-size: 12px; color: #94a3b8; }
 .task-card-footer { display: flex; align-items: center; gap: 8px; }
-.task-due { font-size: 12px; color: #909399; white-space: nowrap; }
-.task-due.overdue { color: #F56C6C; font-weight: 600; }
-.task-desc { color: #606266; line-height: 1.6; white-space: pre-wrap; }
+.task-due { font-size: 12px; color: #64748b; white-space: nowrap; }
+.task-due.overdue { color: #ef4444; font-weight: 600; }
+.task-desc { color: #94a3b8; line-height: 1.6; white-space: pre-wrap; }
 .subtask-list { display: flex; flex-direction: column; gap: 6px; }
-.subtask-item { display: flex; align-items: center; gap: 8px; }
-.subtask-item.done { text-decoration: line-through; color: #c0c4cc; }
+.subtask-item { display: flex; align-items: center; gap: 8px; color: #e2e8f0; }
+.subtask-item.done { text-decoration: line-through; color: #475569; }
 .comment-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 12px; }
-.comment-item strong { font-size: 13px; }
-.comment-time { font-size: 12px; color: #c0c4cc; margin-left: 8px; }
-.comment-item p { margin: 4px 0 0; color: #606266; font-size: 13px; }
+.comment-item strong { font-size: 13px; color: #e2e8f0; }
+.comment-time { font-size: 12px; color: #475569; margin-left: 8px; }
+.comment-item p { margin: 4px 0 0; color: #94a3b8; font-size: 13px; }
 .comment-input { margin-top: 8px; }
 </style>

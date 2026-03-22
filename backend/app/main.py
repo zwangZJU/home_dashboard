@@ -6,11 +6,15 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.v1 import auth, requirements, tasks, meetings, progress, admin, dashboard
 from app.config import settings
+from app.models import Base
+from app.database import engine
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """应用生命周期：启动时无需额外操作，关闭时释放资源"""
+    """应用生命周期：启动时自动建表，关闭时释放资源"""
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
     yield
 
 

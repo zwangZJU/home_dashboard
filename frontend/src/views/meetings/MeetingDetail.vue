@@ -7,7 +7,7 @@
 
     <el-row :gutter="16">
       <el-col :span="16">
-        <el-card shadow="hover" class="mb-4">
+        <el-card shadow="never" class="mb-4">
           <template #header><span class="card-title">基本信息</span></template>
           <el-descriptions :column="2" border>
             <el-descriptions-item label="会议类型">{{ meetingTypeLabel(meeting.meeting_type) }}</el-descriptions-item>
@@ -18,22 +18,22 @@
           </el-descriptions>
         </el-card>
 
-        <el-card shadow="hover" class="mb-4">
+        <el-card shadow="never" class="mb-4">
           <template #header><span class="card-title">📋 会议纪要</span></template>
           <div class="markdown-content" v-html="renderMarkdown(meeting.content)"></div>
         </el-card>
 
-        <el-card shadow="hover">
+        <el-card shadow="never">
           <template #header><span class="card-title">🔗 关联任务</span></template>
           <div v-if="meeting.related_tasks?.length" class="related-tasks">
-            <el-tag v-for="t in meeting.related_tasks" :key="t" size="large" class="task-tag">{{ t }}</el-tag>
+            <el-tag v-for="t in meeting.related_tasks" :key="t" size="large" class="task-tag" effect="dark">{{ t }}</el-tag>
           </div>
           <el-empty v-else description="暂无关联任务" :image-size="60" />
         </el-card>
       </el-col>
 
       <el-col :span="8">
-        <el-card shadow="hover" class="mb-4">
+        <el-card shadow="never" class="mb-4">
           <template #header><span class="card-title">✅ 决议事项</span></template>
           <div class="decision-list">
             <div v-for="d in meeting.decisions" :key="d.id" class="decision-item">
@@ -44,7 +44,7 @@
           </div>
         </el-card>
 
-        <el-card shadow="hover">
+        <el-card shadow="never">
           <template #header><span class="card-title">💬 参会人备注</span></template>
           <div class="notes-list">
             <div v-for="(n, i) in meeting.notes" :key="i" class="note-item">{{ n }}</div>
@@ -87,17 +87,18 @@ onMounted(async () => {
 
 <style scoped>
 .detail-header { margin-bottom: 20px; }
-.detail-header h2 { margin: 8px 0; }
-.card-title { font-weight: 600; }
+.detail-header h2 { margin: 8px 0; color: #e2e8f0; }
+.card-title { font-weight: 600; color: #e2e8f0; }
 .mb-4 { margin-bottom: 16px; }
-.markdown-content { line-height: 1.8; color: #606266; }
-.markdown-content :deep(h3) { font-size: 16px; font-weight: 600; margin: 16px 0 8px; color: #303133; }
-.markdown-content :deep(li) { margin-left: 20px; }
+.markdown-content { line-height: 1.8; color: #94a3b8; }
+.markdown-content :deep(h3) { font-size: 16px; font-weight: 600; margin: 16px 0 8px; color: #e2e8f0; }
+.markdown-content :deep(h4) { font-size: 15px; font-weight: 600; margin: 12px 0 6px; color: #e2e8f0; }
+.markdown-content :deep(li) { margin-left: 20px; color: #94a3b8; }
 .decision-list { display: flex; flex-direction: column; gap: 8px; }
-.decision-item { display: flex; align-items: flex-start; gap: 8px; padding: 8px; background: #fafafa; border-radius: 8px; }
-.decision-item.resolved { text-decoration: line-through; color: #c0c4cc; }
+.decision-item { display: flex; align-items: flex-start; gap: 8px; padding: 8px 12px; background: rgba(15, 23, 42, 0.5); border-radius: 8px; border: 1px solid rgba(0, 240, 255, 0.06); color: #e2e8f0; }
+.decision-item.resolved { text-decoration: line-through; color: #475569; }
 .related-tasks { display: flex; gap: 8px; flex-wrap: wrap; }
 .task-tag { cursor: pointer; }
 .notes-list { display: flex; flex-direction: column; gap: 8px; }
-.note-item { padding: 8px; background: #fafafa; border-radius: 8px; font-size: 13px; color: #606266; }
+.note-item { padding: 8px 12px; background: rgba(15, 23, 42, 0.5); border-radius: 8px; border: 1px solid rgba(0, 240, 255, 0.06); font-size: 13px; color: #94a3b8; }
 </style>

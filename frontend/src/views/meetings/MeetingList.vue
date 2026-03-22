@@ -6,10 +6,10 @@
     </div>
 
     <div class="meeting-cards">
-      <el-card v-for="m in meetings" :key="m.id" shadow="hover" class="meeting-card" @click="$router.push(`/meetings/${m.id}`)">
+      <div v-for="m in meetings" :key="m.id" class="meeting-card" @click="$router.push(`/meetings/${m.id}`)">
         <div class="meeting-card-header">
           <span class="meeting-date">📅 {{ m.meeting_time?.split(' ')[0] }}</span>
-          <el-tag size="small" effect="plain">{{ meetingTypeLabel(m.meeting_type) }}</el-tag>
+          <el-tag size="small" effect="dark">{{ meetingTypeLabel(m.meeting_type) }}</el-tag>
         </div>
         <h3 class="meeting-card-title">{{ m.title }}</h3>
         <div class="meeting-card-meta">
@@ -20,7 +20,7 @@
         <div class="meeting-card-action">
           <el-button type="primary" text>查看详情 →</el-button>
         </div>
-      </el-card>
+      </div>
     </div>
 
     <el-empty v-if="meetings.length === 0" description="暂无会议纪要" />
@@ -75,13 +75,24 @@ onMounted(async () => { meetings.value = await getMeetingsApi() as any[] })
 
 <style scoped>
 .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-.page-header h2 { margin: 0; }
+.page-header h2 { margin: 0; color: #e2e8f0; }
 .meeting-cards { display: flex; flex-direction: column; gap: 12px; }
-.meeting-card { cursor: pointer; transition: transform 0.2s; }
-.meeting-card:hover { transform: translateY(-1px); }
+.meeting-card {
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 240, 255, 0.1);
+  border-radius: 12px; padding: 20px;
+  cursor: pointer; transition: all 0.3s ease;
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.03);
+}
+.meeting-card:hover {
+  transform: translateY(-1px);
+  border-color: rgba(0, 240, 255, 0.25);
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.08);
+}
 .meeting-card-header { display: flex; justify-content: space-between; align-items: center; }
-.meeting-date { font-size: 14px; color: #409EFF; font-weight: 600; }
-.meeting-card-title { font-size: 16px; font-weight: 600; margin: 8px 0; }
-.meeting-card-meta { display: flex; gap: 20px; font-size: 13px; color: #909399; }
+.meeting-date { font-size: 14px; color: #00f0ff; font-weight: 600; text-shadow: 0 0 6px rgba(0, 240, 255, 0.3); }
+.meeting-card-title { font-size: 16px; font-weight: 600; margin: 8px 0; color: #e2e8f0; }
+.meeting-card-meta { display: flex; gap: 20px; font-size: 13px; color: #64748b; }
 .meeting-card-action { margin-top: 8px; }
 </style>
